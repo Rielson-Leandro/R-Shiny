@@ -1,0 +1,5 @@
+"displayName","needResponse","singleTerm","funName"
+"Linear Regression","1","1","lm"
+"Logistic Regression","1","0","glm"
+"ANOVA","1","0","anova"
+"Chi-Square Test of Independence","1","1","chisq.test"
