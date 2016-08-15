@@ -9,18 +9,27 @@ library(shiny)
 library(shinydashboard)
 library(lsa)
 
-
 # Define the header of the dashboard
 header <- dashboardHeader(title = "Rielson Dashboard")
 
 # Define the sidebar of the dashboard
 sidebar <- dashboardSidebar(
   sidebarMenu(
-    menuItem("Welcome", tabName = "tab0"),
+    menuItem("Bem-Vindo", tabName = "tab0"),
     
     menuItem("Tabela", tabName = "tab1"),
     
-    menuItem("Tabela", tabName = "tab2")
+    menuItem("variavel", tabName = "tab3"),
+    
+    menuItem("Grafico", tabName = "tab4"),
+    
+    menuItem("Sumario", tabName = "tab2")
+    
+    
+    
+    
+    
+    
     
   )#SidebarMenu
 )#Sidebar
@@ -29,16 +38,21 @@ sidebar <- dashboardSidebar(
 body <- dashboardBody(
   tabItems(
     
+    tabItem(tabName = "tab0",
+            h3("Escolha uma das opções ao lado")
+
+            
+    ),
+    
     # Tab 1
     tabItem(tabName = "tab1",
-            h3("Pegou"),
-            h5(""),
+            h3("Tabela"),
             fluidRow(
               box(
-                title = "Call data input", 
+                title = "Escolha um arquivo", 
                 status = "primary",
                 width = 4,
-                fileInput('file1', 'Choose CSV File',
+                fileInput('file1', 'Importe um arquivo',
                           accept=c('text/csv', 'text/comma-separated-values,text/plain', '.csv')),
                 tags$hr(),
                 checkboxInput('header1', 'Header', TRUE),
@@ -65,11 +79,53 @@ body <- dashboardBody(
     ),
     
     tabItem(tabName = "tab2",
-  
-      numericInput("nvars", "Número de variáveis:", value = 1, min = 1, max = 2),
-      uiOutput("seletorvariavelx")
+            checkboxInput("residcheck", "Show Residual Plot", FALSE),
+            h4("Regression Model"),
+            verbatimTextOutput("regression"),
+            plotOutput('residplot'),
+            h4("Summary"),
+            verbatimTextOutput("summary")
     
+    ),
+    
+    tabItem(tabName = "tab3",
+            h3("Variaveis"),
+            uiOutput("seletorvariavelx"),
+            uiOutput("seletorvariavely")
+            
+    ),
+    
+    tabItem(tabName = "tab4",
+            h3("Graficos não está funcionando"),
+                        tabPanel("Table", 
+                                 
+                                 DT::dataTableOutput('data_table')),
+                        
+                        tabPanel("Plot",
+                                 radioButtons("plot_type", "Select Plot Type:",
+                                              c("point", "boxplot", "line"),
+                                              inline = TRUE),
+                                 #actionButton("move_filtered", "Send Filtered Data to Main Table"),
+                                 conditionalPanel(
+                                   condition = "input.plot_type == 'point'", 
+                                   plotOutput("plot1",
+                                              brush = "plot_brush"),
+                                   DT::dataTableOutput('position')),
+                                 conditionalPanel(
+                                   condition = "input.plot_type == 'boxplot'",
+                                   plotOutput("plot2",
+                                              brush = "plot_brush"),
+                                   DT::dataTableOutput('position2')),
+                                 conditionalPanel(
+                                   condition = "input.plot_type == 'line'",
+                                   plotOutput("plot3",
+                                              brush = "plot_brush"),
+                                   DT::dataTableOutput('position3')
+                                 )
+                                 
+                        )
     )
+    
     #tabItem(tabName = "tab3", )
     # Close tabItems 
     
