@@ -9,6 +9,8 @@ library(shiny)
 library(shinydashboard)
 library(lsa)
 
+
+
 # Define the header of the dashboard
 header <- dashboardHeader(title = "Rielson Dashboard")
 
@@ -24,11 +26,6 @@ sidebar <- dashboardSidebar(
     menuItem("Grafico", tabName = "tab4"),
     
     menuItem("Sumario", tabName = "tab2")
-    
-    
-    
-    
-    
     
     
   )#SidebarMenu
@@ -79,10 +76,10 @@ body <- dashboardBody(
     ),
     
     tabItem(tabName = "tab2",
-            checkboxInput("residcheck", "Show Residual Plot", FALSE),
-            h4("Regression Model"),
-            verbatimTextOutput("regression"),
-            plotOutput('residplot'),
+            #checkboxInput("residcheck", "Show Residual Plot", FALSE),
+            #h4("Regression Model"),
+            #verbatimTextOutput("regression"),
+            #plotOutput('residplot'),
             h4("Summary"),
             verbatimTextOutput("summary")
     
@@ -90,11 +87,17 @@ body <- dashboardBody(
     
     tabItem(tabName = "tab3",
             h3("Variaveis"),
+            #uiOutput("seletorvariavelx"),
+            #uiOutput("seletorvariavely")
+            numericInput("nvars", "Número de variáveis:", value = 1, min = 1, max = 2),
             uiOutput("seletorvariavelx"),
-            uiOutput("seletorvariavely")
+            conditionalPanel(
+              cond = "input.nvars == 2", 
+              uiOutput("seletorvariavely")
+            )
             
     ),
-    
+  
     tabItem(tabName = "tab4",
             h3("Graficos não está funcionando"),
                         tabPanel("Table", 
@@ -103,28 +106,32 @@ body <- dashboardBody(
                         
                         tabPanel("Plot",
                                  radioButtons("plot_type", "Select Plot Type:",
-                                              c("point", "boxplot", "line"),
+                                              c("point", "boxplot"),
                                               inline = TRUE),
                                  #actionButton("move_filtered", "Send Filtered Data to Main Table"),
                                  conditionalPanel(
                                    condition = "input.plot_type == 'point'", 
-                                   plotOutput("plot1",
-                                              brush = "plot_brush"),
-                                   DT::dataTableOutput('position')),
+                                   plotOutput("plot1")),
+                                              #brush = "plot_brush"),
+                                   #DT::dataTableOutput('position')),
                                  conditionalPanel(
                                    condition = "input.plot_type == 'boxplot'",
-                                   plotOutput("plot2",
-                                              brush = "plot_brush"),
-                                   DT::dataTableOutput('position2')),
-                                 conditionalPanel(
-                                   condition = "input.plot_type == 'line'",
-                                   plotOutput("plot3",
-                                              brush = "plot_brush"),
-                                   DT::dataTableOutput('position3')
-                                 )
+                                   plotOutput("plot2"))
+                                   #           brush = "plot_brush"),
+                                   #DT::dataTableOutput('position2')),
+                               #  conditionalPanel(
+                                #   condition = "input.plot_type == 'line'",
+                                 #  plotOutput("plot3")
+                                  #            brush = "plot_brush"),
+                                   #DT::dataTableOutput('position3')
+                                 #)
                                  
                         )
     )
+    
+    
+    
+    
     
     #tabItem(tabName = "tab3", )
     # Close tabItems 
